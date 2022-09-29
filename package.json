@@ -1,0 +1,19 @@
+{
+  "name": "aws-rekognition",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/utkaln/aws-rekognition.git"
+  },
+  "author": "Utkal Nayak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/utkaln/aws-rekognition/issues"
+  },
+  "homepage": "https://github.com/utkaln/aws-rekognition#readme"
+}
