@@ -1,10 +1,27 @@
 // code reference from AWS Docs
 const AWS = require("aws-sdk");
 const rekog = new AWS.Rekognition();
+const docClient = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async (event) => {
   console.log("Object detected in trvpiij22");
-  return await processImage(event);
+  const imgData = await processImage(event);
+  console.log(JSON.stringify(imgData));
+  const batchParams = await processDDB(imgData);
+  console.log(JSON.stringify(batchParams));
+  docClient.batchWrite(batchParams, (err, data) => {
+    if (err) {
+      console.log(
+        "Error occurred from method Batch Write()-> ",
+        err.code,
+        err.message
+      );
+    } else {
+      console.log("Returned data from method Batch Write() -> ", data);
+    }
+  });
+
+  //return ddbUpdate;
 };
 
 //Detect Objects from S3 bucket
@@ -48,7 +65,32 @@ const processImage = async function (event) {
       console.log("------------");
       console.log("Rekognition Analysis Complete !");
     }); // for response.labels
+    return data;
   } catch (error) {
     console.log(error);
   }
+};
+
+const processDDB = async function (data) {
+  const ddbArr = [];
+  data.Labels.forEach((label) => {
+    ddbArr.push({
+      PutRequest: {
+        Item: {
+          // TODO - hardcoded user id
+          pk: "utkalnayak",
+          sk: label.Name,
+          confidence: label.Confidence,
+        },
+      },
+    });
+  });
+
+  // build request param for batch write
+  var batchParams = {
+    RequestItems: {
+      "trvpi-property-catalog": ddbArr,
+    },
+  };
+  return batchParams;
 };
