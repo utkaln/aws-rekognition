@@ -81,6 +81,7 @@ const processDDB = async function (data) {
           pk: "utkalnayak",
           sk: label.Name,
           confidence: label.Confidence,
+          price: 400,
         },
       },
     });
